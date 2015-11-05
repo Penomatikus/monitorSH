@@ -77,6 +77,19 @@ do
 done
 echo "]"
 
+##### grap some infotmation about the current network
+ssid=`iwgetid -a $device | grep -wo '[0-9a-fA-F]\{2\}\(:[0-9a-fA-F]\{2\}\)\{5\}'`
+noSsid='00:00:00:00:00:00 '
+if [ $ssid==$noSsid ]; then
+  channel='No connection before monitorSH'
+  ssid='No connection before monitorSH'
+  essid='No connection before monitorSH'
+else
+  channel=`iwgetid -c $device | egrep -o '(Channel:)[0-9]*'`
+  essid=`iwgetid -r $device`
+fi
+
+
 #### Trying to put the device down for changeing mode
 if ifconfig $device down; then
     echo [+] Putting $device down
@@ -130,9 +143,12 @@ if iwconfig $device | grep -wq Monitor
 then
     monitor=`iwconfig $device | grep -wo Mode:Monitor`
     wirelessMode=`iwconfig $device | grep -wo 'IEEE 802.11[(a|b|g|n)]\{1,4\}'`
-    echo -e "\n[+] Check OK: \033[1;32m $monitor \033[0m"
-    echo -e "[!] Mac: \033[1;37m $mac \033[0m"
-    echo -e "[!] Wireless Modus: \033[1;37m $wirelessMode \033[0m \n"
+    echo -e "\n[+] Check OK: \t\t\033[1;32m $monitor \033[0m"
+    echo -e "[!] Mac:  \t\t\033[1;37m $mac \033[0m"
+    echo -e "[!] Wireless mode: \t\033[1;37m $wirelessMode \033[0m"
+    echo -e "[!] Old ESSID: \t\t\033[1;37m $essid \033[0m"
+    echo -e "[!] Old SSID: \t\t\033[1;37m $ssid \033[0m"
+    echo -e "[!] Old B/E/SSID channel:\033[1;37m $channel \033[0m \n"
     printf "[?] If you enable wireshak decryption, you can only might decrypt\n    frames from devices, that are using the same modus: $wirelessMode\n"
 else
     echo [-] Please run this script again.
