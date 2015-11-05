@@ -15,6 +15,7 @@ up=$2
 #### check if root
 if [ "$(id -u)" != "0" ]; then
     echo [-] Script must be run as root.
+    echo [!] sudo ./monitor.sh wlan-device-name
     exit 1
 else
     echo [+] Root
@@ -60,8 +61,7 @@ else
         else
             echo [-] No device found
             echo [?] Mayby one of them':'
-            echo `ifconfig | grep wlan`
-            echo `ifconfig | grep wifi`
+            echo -e  "   \033[1;37m" `ifconfig | egrep -o '^w([a-zA-Z]|[0-9])*'` "\033[0m"
             exit 1
         fi
     fi
@@ -95,6 +95,20 @@ else
     #### Trying to "wake up" device from beeing down
     if ifconfig $device up; then
         printf ' Success!\n'
+        echo [!] Checking internet connection. This may take a 'while'.
+        wget -q --spider www.stackoverflow.com
+        if [ $? -eq 0 ]; then
+          echo [+] Your are now online
+        else
+          echo [-] Offline. Do you want to restart your network-manager by monitorSH? [ y / n ]
+          read input
+          if [[ $input == "Y" || $input == "y" ]]; then
+            echo [!] Stopping network manager.
+            service network-manager stop
+            echo [!] Starting network manager.
+            service network-manager start
+          fi
+        fi
     else
         printf Failed. Please wake up device by hand.
         exit 1
