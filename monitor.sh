@@ -79,8 +79,7 @@ echo "]"
 
 ##### grap some infotmation about the current network
 ssid=`iwgetid -a $device | grep -wo '[0-9a-fA-F]\{2\}\(:[0-9a-fA-F]\{2\}\)\{5\}'`
-noSsid='00:00:00:00:00:00 '
-if [ $ssid==$noSsid ]; then
+if [ $ssid = "00:00:00:00:00:00" ]; then
   channel='No connection before monitorSH'
   ssid='No connection before monitorSH'
   essid='No connection before monitorSH'
