@@ -84,7 +84,7 @@ if [ $ssid = "00:00:00:00:00:00" ]; then
   ssid='No connection before monitorSH'
   essid='No connection before monitorSH'
 else
-  channel=`iwgetid -c $device | egrep -o '(Channel:)[0-9]*'`
+  channel=`iwgetid -c $device | egrep -o ':[0-9].'`
   essid=`iwgetid -r $device`
 fi
 
@@ -162,7 +162,5 @@ if which aircrack-ng > /dev/null; then
 else
     echo [-] aircrack-ng is not installed. Please 'install' aircrack-ng.
 fi
-
-
 
 exit 0
