@@ -159,6 +159,9 @@ fi
 if which aircrack-ng > /dev/null; then
     echo [+] aircrack-ng is installed
     echo "    You can now run airmon-ng start $device [channel or frequency]"
+elif [ -d "/opt/aircrack-*"] then 
+    echo [+] aircrack-ng is installed in /opt/
+    echo "    You can now run airmon-ng start $device [channel or frequency]"
 else
     echo [-] aircrack-ng is not installed. Please 'install' aircrack-ng.
 fi
